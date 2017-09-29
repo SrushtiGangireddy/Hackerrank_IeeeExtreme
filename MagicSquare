@@ -1,0 +1,97 @@
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        int n = sc.nextInt();
+        
+        int[][] arr=new int[n][n];
+        
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                arr[i][j] = sc.nextInt();
+            }
+        }
+        
+        int x,y;
+        
+        int sum = 0;
+        
+        for(x=0,y=0;x<n && y<n;x++,y++){
+            
+            sum += arr[x][y];
+            
+        }
+        
+        int anti_sum = 0;
+        
+        for(x=n-1,y=0;x>=0 && y<n;x--,y++){
+            
+            anti_sum += arr[x][y];
+            
+        }
+        
+        ArrayList<Integer> notMatch = new ArrayList<Integer>();
+        
+        if(anti_sum != sum){
+            notMatch.add(0);
+        }
+        
+        //System.out.println(anti_sum);
+        
+        for(x=0;x<n;x++){
+            
+            int row_sum = 0;
+            
+            for(y=0;y<n;y++){
+                row_sum += arr[x][y];
+                
+                //if(row_sum > sum){
+                  //  notMatch.add(x+1);
+                //}
+                
+            }
+            if(row_sum != sum && !notMatch.contains((x+1))){
+                notMatch.add(x+1);
+            }
+        }
+        
+        for(y=0;y<n;y++){
+            
+            int col_sum = 0;
+            
+            for(x=0;x<n;x++){
+                
+                col_sum += arr[x][y];
+              //  if(col_sum > sum){
+                //    notMatch.add(-1*(y+1));
+               // }
+            }
+            
+            if(col_sum != sum && !notMatch.contains((-1*(y+1)))){
+                notMatch.add(-1*(y+1));
+            }
+            
+          //  System.out.println(col_sum);
+        }
+        if(notMatch.size() == 0){
+            System.out.println("0");
+        }else{
+            System.out.println(notMatch.size());
+            Collections.sort(notMatch);
+            for(Integer ind:notMatch){
+                System.out.println(ind);
+            }
+        }
+        //System.out.println(notMatch);
+        
+        
+        
+    }
+}
