@@ -1,0 +1,147 @@
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    public static void main(String[] args) {
+       
+        Scanner sc = new Scanner(System.in);
+        
+        int n = sc.nextInt();
+        
+        int[] nums = new int[n];
+        
+        for(int i=0;i<n;i++){
+            nums[i] = sc.nextInt();
+        }
+        
+        int q = sc.nextInt();
+        
+        HashMap<Integer,ArrayList<ArrayList<Integer>>> subs = findAllSubsets(nums);
+        
+        
+        int[] queries = new int[q];
+        
+        for(int i=0;i<q;i++){
+            queries[i] = sc.nextInt();
+            
+            ArrayList<ArrayList<Integer>> match = subs.get(queries[i]);
+            System.out.println(match.size());
+            
+        }
+        
+        
+        
+    }
+    
+    public static HashMap<Integer,ArrayList<ArrayList<Integer>>> findAllSubsets(int[] nums){
+        
+        int n = nums.length;
+        
+        ArrayList<ArrayList<Integer>> subsets = new ArrayList<ArrayList<Integer>>();
+        HashMap<Integer,ArrayList<ArrayList<Integer>>> gcd_sets = new HashMap<Integer,ArrayList<ArrayList<Integer>>>();
+        
+        for(int i = 0; i < (1<<n); i++){
+            
+            ArrayList<Integer> temp = new ArrayList<Integer>();
+            
+            for(int j=0;j<n;j++){
+                
+                if((i & (1 << j)) > 0){
+                    temp.add(nums[j]);
+                }
+                
+            }
+            
+            subsets.add(temp);
+           // System.out.println(temp);
+            if(temp != null && temp.size() > 1){
+            
+            int gcd = findGcd(temp,temp.size());
+            
+            if(gcd_sets.containsKey(gcd)){
+                
+                ArrayList<ArrayList<Integer>> prev = (ArrayList<ArrayList<Integer>>)gcd_sets.get(gcd);
+                 
+                        prev.add(temp);
+                        gcd_sets.put(gcd,prev);
+                   
+                
+            }else{
+                
+                ArrayList<ArrayList<Integer>> next = new ArrayList<ArrayList<Integer>>();
+                next.add(temp);
+                gcd_sets.put(gcd,next);
+                
+            }
+        }else if(temp.size() == 1){
+                
+                int gcs_single = temp.get(0);
+                
+                if(gcd_sets.containsKey(gcs_single)){
+                
+                ArrayList<ArrayList<Integer>> prev = (ArrayList<ArrayList<Integer>>)gcd_sets.get(gcs_single);
+                  
+                        prev.add(temp);
+                        gcd_sets.put(gcs_single,prev);
+                    
+                
+            }else{
+                
+                ArrayList<ArrayList<Integer>> next = new ArrayList<ArrayList<Integer>>();
+                next.add(temp);
+                gcd_sets.put(gcs_single,next);
+                
+            }
+                
+                
+                
+            }
+        }
+        
+        
+      //  System.out.println(gcd_sets);
+        
+        return gcd_sets;
+    }
+    
+    
+    public static int findGcd(ArrayList<Integer> nums,int n){
+        
+        if(nums.size() > 0){
+        
+        int result = nums.get(0);
+        
+        int len = nums.size();
+        
+        for(int i=1;i<len;i++){
+            
+            result = gcd(nums.get(i),result);
+            
+        }
+        
+        return result;
+        
+        }else if(nums.size() == 1){
+            return nums.get(0);
+        }
+        else{
+            return 0;
+        }
+        
+    }
+    
+    public static int gcd(int a,int b){
+        
+        
+        if(a == 0){
+            return b;
+        }
+        return gcd(b%a,a);
+    }
+    
+    
+}
